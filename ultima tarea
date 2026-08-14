@@ -1,1 +1,68 @@
 
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stdexcept>
+#include <iomanip>
+
+using namespace std;
+
+// Definición de la entidad Producto
+struct Producto {
+    string nombre;
+    float precio;
+};
+
+int main() {
+    // 1. Declaración del contenedor dinámico de objetos
+    vector<Producto> inventario;
+
+    // 2. Población inicial de la estructura de datos
+    inventario.push_back({"Microcontrolador ESP32", 350.75});
+    inventario.push_back({"Cable de Red Cat 6", 85.00});
+    inventario.push_back({"Switch Gestionable", 2450.50});
+    inventario.push_back({"Adaptador Inalambrico", 620.00});
+
+    // Configuración global para mostrar dos decimales en los precios
+    cout << fixed << setprecision(2);
+
+    // 3. Iteración e impresión del inventario base
+    cout << "=========================================\n";
+    cout << "       REPORTE ACTUAL DE INVENTARIO      \n";
+    cout << "=========================================\n";
+    for (const auto& item : inventario) {
+        cout << "[-] " << item.nombre << " - Costo: $" << item.precio << "\n";
+    }
+
+    // 4. Actualización de registros con validación cruzada
+    cout << "\n[!] Evento: Actualizando el precio del 'Cable de Red Cat 6' (Indice 1)...\n";
+    inventario[1].precio = 95.50; // Acceso rápido (asumiendo que sabemos que es seguro)
+
+    try {
+        // Acceso seguro para lectura crítica
+        cout << "[OK] Verificacion exitosa: " << inventario.at(1).nombre 
+             << " fue ajustado a $" << inventario.at(1).precio << "\n";
+    } catch (const out_of_range& error) {
+        cerr << "[ERROR CRITICO] Intento de acceso a un espacio de memoria no asignado.\n";
+    }
+
+    // 5. Análisis estadístico de los datos (Promedio)
+    float acumulador_precios = 0.0f;
+    for (const auto& item : inventario) {
+        acumulador_precios += item.precio;
+    }
+    
+    // Prevención de división por cero
+    float promedio_inventario = 0.0f;
+    if (!inventario.empty()) {
+        promedio_inventario = acumulador_precios / inventario.size();
+    }
+
+    cout << "\n=========================================\n";
+    cout << "           MÉTRICAS FINANCIERAS          \n";
+    cout << "=========================================\n";
+    cout << "Valor Promedio por Articulo: $" << promedio_inventario << "\n";
+    cout << "Total de Articulos Registrados: " << inventario.size() << "\n";
+
+    return 0;
+}
